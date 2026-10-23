@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bastón Inteligente | Tecnología para la Inclusión - Grado 10-2</title>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para iconografía moderna -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QRCode JS para generación dinámica de código QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Google Fonts - Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',    // Azul muy oscuro
+                            navy: '#1e3a8a',    // Azul marino
+                            primary: '#3b82f6', // Azul claro / principal
+                            light: '#60a5fa',   // Azul suave
+                            emerald: '#10b981', // Verde esmeralda para detalles y accesibilidad
+                            bgLight: '#f8fafc', // Fondo gris claro
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1e40af 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        /* Para impresión de reporte */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; color: black; }
+        }
+    </style>
+</head>
+<body class="bg-brand-bgLight text-slate-800 font-sans antialiased selection:bg-brand-primary selection:text-white">
+
+    <!-- 1. HEADER / NAVEGACIÓN STICKY -->
+    <header class="sticky top-0 z-50 glass-card shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo / Título corto -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand-primary flex items-center justify-center text-white shadow-md shadow-blue-500/30">
+                        <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                    </div>
+                    <div>
+                        <span class="font-heading font-bold text-lg text-brand-dark block leading-none">Bastón Inteligente</span>
+                        <span class="text-xs text-brand-primary font-medium">Tecnología para la Inclusión</span>
+                    </div>
+                </div>
+
+                <!-- Menú Desktop -->
+                <nav class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">
+                    <a href="#introduccion" class="hover:text-brand-primary transition-colors">Introducción</a>
+                    <a href="#objetivos" class="hover:text-brand-primary transition-colors">Objetivos</a>
+                    <a href="#materiales" class="hover:text-brand-primary transition-colors">Materiales</a>
+                    <a href="#funcionamiento" class="hover:text-brand-primary transition-colors">Funcionamiento</a>
+                    <a href="#prototipo" class="hover:text-brand-primary transition-colors">Prototipo Real</a>
+                    <a href="#pruebas" class="hover:text-brand-primary transition-colors">Pruebas</a>
+                    <a href="#qr-section" class="hover:text-brand-primary transition-colors">Código QR</a>
+                </nav>
+
+                <!-- Botón de Acción Menú Móvil & Acceso Rápido -->
+                <div class="flex items-center space-x-3">
+                    <a href="#funcionamiento" class="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-xs font-semibold rounded-lg text-white bg-brand-emerald hover:bg-emerald-600 transition-all shadow-sm">
+                        <i class="fa-solid fa-play-circle mr-1.5"></i> Ver Funcionamiento
+                    </a>
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:text-brand-primary focus:outline-none" aria-label="Abrir menú">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-2 text-sm font-medium text-slate-700">
+            <a href="#introduccion" class="block py-2 hover:text-brand-primary">Introducción</a>
+            <a href="#problema" class="block py-2 hover:text-brand-primary">Planteamiento del Problema</a>
+            <a href="#objetivos" class="block py-2 hover:text-brand-primary">Objetivos</a>
+            <a href="#materiales" class="block py-2 hover:text-brand-primary">Materiales Confirmados</a>
+            <a href="#funcionamiento" class="block py-2 hover:text-brand-primary">¿Cómo Funciona?</a>
+            <a href="#prototipo" class="block py-2 hover:text-brand-primary">Prototipo Real</a>
+            <a href="#pruebas" class="block py-2 hover:text-brand-primary">Tabla de Pruebas</a>
+            <a href="#equipo" class="block py-2 hover:text-brand-primary">Equipo de Trabajo</a>
+            <a href="#qr-section" class="block py-2 text-brand-emerald font-semibold">Generar / Ver Código QR</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. PORTADA (HERO SECTION) -->
+        <section class="gradient-hero text-white relative overflow-hidden py-16 lg:py-24">
+            <!-- Patrón Decorativo de Fondo -->
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Información Principal Portada -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center space-x-2 bg-blue-500/20 border border-blue-400/30 rounded-full px-3 py-1 text-xs sm:text-sm text-blue-200 backdrop-blur-md">
+                            <span class="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
+                            <span>Proyecto Escolar de Tecnología e Informática</span>
+                        </div>
+                        
+                        <h1 class="font-heading text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                            Bastón Inteligente: <br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-sky-300 to-emerald-300">
+                                Tecnología para la Inclusión
+                            </span>
+                        </h1>
+                        
+                        <p class="text-base sm:text-lg text-slate-200 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                            Una propuesta tecnológica desarrollada para apoyar la detección de obstáculos cercanos y promover la concientización sobre la accesibilidad y movilidad de las personas con discapacidad visual.
+                        </p>
+
+                        <!-- Botones de Acción -->
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
+                            <a href="#funcionamiento" class="px-6 py-3.5 rounded-xl font-semibold bg-brand-primary hover:bg-blue-600 text-white shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center space-x-2">
+                                <span>Ver Funcionamiento</span>
+                                <i class="fa-solid fa-arrow-right text-sm"></i>
+                            </a>
+                            <a href="#prototipo" class="px-6 py-3.5 rounded-xl font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all flex items-center justify-center space-x-2 backdrop-blur-md">
+                                <i class="fa-solid fa-camera"></i>
+                                <span>Ver Fotografía Real</span>
+                            </a>
+                        </div>
+
+                        <!-- Ficha Rápida Institucional -->
+                        <div class="pt-6 border-t border-slate-700/60 grid grid-cols-2 sm:grid-cols-3 gap-4 text-left">
+                            <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-700/40">
+                                <span class="text-xs text-slate-400 block font-medium">Curso</span>
+                                <span class="font-bold text-white text-sm">Grado 10-2</span>
+                            </div>
+                            <div class="bg-slate-800/40 p-3 rounded-lg border border-slate-700/40">
+                                <span class="text-xs text-slate-400 block font-medium">Área</span>
+                                <span class="font-bold text-white text-sm">Tecnología e Informática</span>
+                            </div>
+                            <div class="col-span-2 sm:col-span-1 bg-slate-800/40 p-3 rounded-lg border border-slate-700/40">
+                                <span class="text-xs text-slate-400 block font-medium">Equipo</span>
+                                <span class="font-bold text-white text-xs sm:text-sm">Campos, Morales, Julio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ficha del Proyecto Interactiva / editable -->
+                    <div class="lg:col-span-5">
+                        <div class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-6 shadow-2xl backdrop-blur-xl relative">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+                                <h3 class="font-heading font-bold text-lg text-white flex items-center">
+                                    <i class="fa-solid fa-id-card text-brand-primary mr-2"></i>
+                                    Ficha Técnica del Proyecto
+                                </h3>
+                                <span class="text-xs bg-brand-emerald/20 text-brand-emerald px-2 py-1 rounded border border-brand-emerald/30 font-semibold">Prototipo 100% Confirmado</span>
+                            </div>
+
+                            <div class="space-y-4 text-sm">
+                                <div>
+                                    <label for="inst-name" class="block text-xs font-semibold text-slate-400 mb-1">INSTITUCIÓN EDUCATIVA (Editable):</label>
+                                    <input type="text" id="inst-name" value="[ Escriba aquí el nombre del Colegio ]" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-brand-primary transition-colors text-sm font-medium">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-slate-800/60 p-3 rounded-lg">
+                                        <span class="text-xs text-slate-400 block font-semibold">CURSO</span>
+                                        <span class="text-slate-200 font-bold">10-2</span>
+                                    </div>
+                                    <div class="bg-slate-800/60 p-3 rounded-lg">
+                                        <span class="text-xs text-slate-400 block font-semibold">ÁREA</span>
+                                        <span class="text-slate-200 font-bold">Tecnología e Info.</span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <span class="text-xs text-slate-400 block font-semibold mb-1">INTEGRANTES DEL EQUIPO:</span>
+                                    <ul class="space-y-1.5 bg-slate-800/60 p-3 rounded-lg text-slate-200 font-medium">
+                                        <li class="flex items-center text-xs"><i class="fa-solid fa-user-check text-brand-emerald mr-2"></i> Nicolás Campos</li>
+                                        <li class="flex items-center text-xs"><i class="fa-solid fa-user-check text-brand-emerald mr-2"></i> Aylyn Morales</li>
+                                        <li class="flex items-center text-xs"><i class="fa-solid fa-user-check text-brand-emerald mr-2"></i> Akemi Julio</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <span class="text-xs text-slate-400 block font-semibold mb-1">COMPONENTES PRINCIPALES:</span>
+                                    <div class="flex flex-wrap gap-1.5">
+                                        <span class="bg-blue-900/60 text-blue-200 border border-blue-700/50 text-xs px-2.5 py-1 rounded-md">Estructura PVC</span>
+                                        <span class="bg-blue-900/60 text-blue-200 border border-blue-700/50 text-xs px-2.5 py-1 rounded-md">Sensor Ultrasónico</span>
+                                        <span class="bg-emerald-900/60 text-emerald-200 border border-emerald-700/50 text-xs px-2.5 py-1 rounded-md">LED Indicador</span>
+                                        <span class="bg-slate-800 text-slate-300 border border-slate-700 text-xs px-2.5 py-1 rounded-md">Placa Controlador</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. INTRODUCCIÓN Y PLANTEAMIENTO DEL PROBLEMA -->
+        <section id="introduccion" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                    
+                    <!-- B. Introducción -->
+                    <div class="bg-brand-bgLight p-8 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-brand-primary text-xl font-bold mb-4">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <h2 class="font-heading text-2xl font-bold text-brand-dark mb-4">B. Introducción al Proyecto</h2>
+                        <p class="text-slate-600 leading-relaxed text-base mb-4">
+                            Un <strong>bastón inteligente</strong> es una adaptación tecnológica del bastón blanco tradicional, diseñada para incorporar componentes electrónicos capaces de detectar objetos antes de que exista un contacto físico directo.
+                        </p>
+                        <p class="text-slate-600 leading-relaxed text-base">
+                            Este proyecto aborda la necesidad de fortalecer los elementos de apoyo a la movilidad, explorando cómo la tecnología accesible y de bajo costo puede contribuir al desarrollo de prototipos inclusivos. A través del área de Tecnología e Informática, integramos sensores y controladores para comprender en la práctica el diseño de herramientas de impacto social.
+                        </p>
+                    </div>
+
+                    <!-- C. Planteamiento del Problema -->
+                    <div id="problema" class="bg-brand-bgLight p-8 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 text-xl font-bold mb-4">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <h2 class="font-heading text-2xl font-bold text-brand-dark mb-4">C. Planteamiento del Problema</h2>
+                        <p class="text-slate-600 leading-relaxed text-base mb-4">
+                            Durante sus desplazamientos cotidianos, las personas con discapacidad visual o baja visión se enfrentan a un entorno urbano o escolar dinámico donde pueden existir obstáculos estáticos y en movimiento a diversas alturas y distancias.
+                        </p>
+                        <p class="text-slate-600 leading-relaxed text-base">
+                            Detectar a tiempo la cercanía de un objeto resulta clave para una navegación segura. Ante esta situación, surge el interrogante pedagógico y técnico: <em>¿Cómo podemos diseñar un prototipo económico, funcional y accesible que explore la detección electrónica de obstáculos a corta distancia?</em>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. JUSTIFICACIÓN Y OBJETIVOS -->
+        <section id="objetivos" class="py-16 bg-slate-50 border-y border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                
+                <!-- D. Justificación -->
+                <div class="max-w-3xl mx-auto text-center space-y-4">
+                    <span class="text-xs font-bold text-brand-primary tracking-wider uppercase bg-blue-100 px-3 py-1 rounded-full">Sección D</span>
+                    <h2 class="font-heading text-3xl font-bold text-brand-dark">D. Justificación</h2>
+                    <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+                        Construimos este proyecto para aplicar de forma práctica los conocimientos de programación, circuitos y sensores adquiridos en décimo grado. Decidimos enfocar nuestro trabajo en la inclusión social porque creemos firmemente que la tecnología adquiere un verdadero valor cuando se pone al servicio de la comunidad, permitiéndonos identificar necesidades reales de nuestro entorno y proponer soluciones funcionales dentro del aula.
+                    </p>
+                </div>
+
+                <!-- E. Objetivos -->
+                <div>
+                    <div class="text-center mb-10">
+                        <span class="text-xs font-bold text-brand-emerald tracking-wider uppercase bg-emerald-100 px-3 py-1 rounded-full">Sección E</span>
+                        <h2 class="font-heading text-3xl font-bold text-brand-dark mt-2">E. Objetivos del Proyecto</h2>
+                    </div>
+
+                    <!-- Objetivo General -->
+                    <div class="bg-gradient-to-r from-brand-navy to-brand-dark text-white p-6 sm:p-8 rounded-2xl shadow-md mb-8">
+                        <div class="flex items-start space-x-4">
+                            <div class="p-3 bg-brand-primary/30 rounded-xl text-brand-primary text-2xl font-bold mt-1">
+                                <i class="fa-solid fa-bullseye text-white"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm uppercase tracking-wider text-blue-300 font-semibold mb-1">Objetivo General</h3>
+                                <p class="text-lg sm:text-xl font-medium leading-relaxed text-slate-100">
+                                    Construir un prototipo de bastón inteligente que explore el uso de un sensor ultrasónico y una señal luminosa para detectar e indicar la presencia de obstáculos cercanos.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Objetivos Específicos -->
+                    <h3 class="font-heading font-bold text-xl text-brand-dark mb-6">Objetivos Específicos</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 text-brand-primary font-bold flex items-center justify-center mb-4">1</div>
+                            <h4 class="font-bold text-brand-dark mb-2">Comprensión de Sensores</h4>
+                            <p class="text-sm text-slate-600">Comprender el funcionamiento básico de un sensor ultrasónico en la emisión y recepción de ondas sonoras.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 text-brand-primary font-bold flex items-center justify-center mb-4">2</div>
+                            <h4 class="font-bold text-brand-dark mb-2">Integración Electrónica</h4>
+                            <p class="text-sm text-slate-600">Integrar los componentes electrónicos utilizados en el prototipo de forma segura sobre la estructura.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 text-brand-primary font-bold flex items-center justify-center mb-4">3</div>
+                            <h4 class="font-bold text-brand-dark mb-2">Programación y Lógica</h4>
+                            <p class="text-sm text-slate-600">Programar y comprobar la respuesta del sistema de acuerdo con la distancia detectada por el sensor.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 text-brand-primary font-bold flex items-center justify-center mb-4">4</div>
+                            <h4 class="font-bold text-brand-dark mb-2">Evaluación Experimental</h4>
+                            <p class="text-sm text-slate-600">Evaluar el funcionamiento del circuito mediante pruebas controladas con diversos tipos de obstáculos.</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow md:col-span-2 lg:col-span-1">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-100 text-brand-emerald font-bold flex items-center justify-center mb-4">5</div>
+                            <h4 class="font-bold text-brand-dark mb-2">Sensibilización Social</h4>
+                            <p class="text-sm text-slate-600">Promover la reflexión escolar sobre el papel de la tecnología en la creación de entornos inclusivos.</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 5. MATERIALES UTILIZADOS -->
+        <section id="materiales" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-xs font-bold text-brand-primary tracking-wider uppercase bg-blue-100 px-3 py-1 rounded-full">Sección F</span>
+                    <h2 class="font-heading text-3xl font-bold text-brand-dark mt-2">F. Materiales Confirmados</h2>
+                    <p class="text-slate-600 text-sm sm:text-base">Descripción detallada de cada componente integrado en nuestro prototipo escolar.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Tubo PVC -->
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-slate-200 text-slate-700 rounded-xl flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-ruler-vertical"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-brand-dark mb-2">Tubo de PVC</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Constituye la estructura física principal y cuerpo rígido del bastón. Ofrece ligereza, resistencia y facilidades para acoplar los módulos electrónicos.
+                            </p>
+                        </div>
+                        <span class="inline-block mt-4 text-[11px] font-semibold text-slate-500 bg-slate-200/60 px-2 py-1 rounded w-max">Soporte Estructural</span>
+                    </div>
+
+                    <!-- Sensor Ultrasónico -->
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-blue-100 text-brand-primary rounded-xl flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-radar"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-brand-dark mb-2">Sensor Ultrasónico</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Permite estimar la distancia hasta un objeto enviando ráfagas de ultrasonido y midiendo el tiempo exacto que tarda en retornar su eco.
+                            </p>
+                        </div>
+                        <span class="inline-block mt-4 text-[11px] font-semibold text-brand-primary bg-blue-100 px-2 py-1 rounded w-max">Módulo de Detección</span>
+                    </div>
+
+                    <!-- LED Indicador -->
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-emerald-100 text-brand-emerald rounded-xl flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-lightbulb"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-brand-dark mb-2">LED Indicador</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                Emitirá una señal luminosa inmediata en cuanto el controlador confirme que existe un objeto dentro del rango configurado.
+                            </p>
+                        </div>
+                        <span class="inline-block mt-4 text-[11px] font-semibold text-brand-emerald bg-emerald-100 px-2 py-1 rounded w-max">Señal Luminosa</span>
+                    </div>
+
+                    <!-- Controlador Arduino -->
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-microchip"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-brand-dark mb-2">Placa Controlador</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                (Arduino) Unidad central de procesamiento que ejecuta las instrucciones cargadas, procesa los tiempos del sensor y enciende el LED.
+                            </p>
+                        </div>
+                        <span class="inline-block mt-4 text-[11px] font-semibold text-indigo-600 bg-indigo-100 px-2 py-1 rounded w-max">Cerebro del Sistema</span>
+                    </div>
+
+                </div>
+
+                <!-- NOTA ACLARATORIA BUZZER / LED -->
+                <div class="mt-8 bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-xl">
+                    <div class="flex items-start space-x-3">
+                        <i class="fa-solid fa-circle-info text-amber-600 text-xl mt-0.5"></i>
+                        <div>
+                            <h4 class="font-bold text-amber-900 text-sm">Aclaración Importante sobre la Alarma Sonora</h4>
+                            <p class="text-xs text-amber-800 leading-relaxed mt-1">
+                                Para la fase inicial de nuestro prototipo escolar, no se utilizó un zumbador (buzzer) debido a la falta de disponibilidad del componente durante el ensamblaje. En su lugar, incorporamos un <strong>LED indicador luminoso</strong> para comprobar visualmente la activación del sistema durante la prueba experimental.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Espacio interactivo para agregar otros componentes -->
+                <div class="mt-6 bg-slate-100/70 p-4 rounded-xl border border-dashed border-slate-300 text-center">
+                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">Otros componentes empleados:</span>
+                    <div class="flex flex-wrap justify-center gap-2 text-xs text-slate-700">
+                        <span class="bg-white px-3 py-1 rounded border border-slate-200"><i class="fa-solid fa-plug text-slate-400 mr-1"></i> Cables DuPont / Jumper</span>
+                        <span class="bg-white px-3 py-1 rounded border border-slate-200"><i class="fa-solid fa-battery-full text-slate-400 mr-1"></i> Fuente de Alimentación / Batería</span>
+                        <span class="bg-white px-3 py-1 rounded border border-slate-200"><i class="fa-solid fa-bread-slice text-slate-400 mr-1"></i> Protoboard / Placa de Pruebas</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 6. ¿CÓMO FUNCIONA EL BASTÓN INTELIGENTE? -->
+        <section id="funcionamiento" class="py-16 bg-slate-900 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-xs font-bold text-sky-400 tracking-wider uppercase bg-sky-950 px-3 py-1 rounded-full border border-sky-800">Sección G</span>
+                    <h2 class="font-heading text-3xl font-bold text-white mt-3">G. ¿Cómo Funciona el Bastón Inteligente?</h2>
+                    <p class="text-slate-300 text-sm sm:text-base mt-2">Secuencia lógica del proceso de detección electrónica en 5 pasos.</p>
+                </div>
+
+                <!-- Diagrama visual interactivo -->
+                <div class="bg-slate-800/80 border border-slate-700 p-6 sm:p-8 rounded-2xl mb-12 shadow-xl">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6 text-center">Diagrama de Flujo del Sistema</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center text-center">
+                        
+                        <!-- Bloque 1 -->
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 relative group hover:border-sky-500 transition-colors">
+                            <i class="fa-solid fa-cubes text-3xl text-sky-400 mb-2"></i>
+                            <h4 class="font-bold text-sm text-white">1. OBSTÁCULO</h4>
+                            <p class="text-[11px] text-slate-400 mt-1">Objeto interpuesto en la trayectoria</p>
+                        </div>
+
+                        <div class="hidden md:flex justify-center text-sky-400 text-xl"><i class="fa-solid fa-chevron-right"></i></div>
+
+                        <!-- Bloque 2 -->
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 relative group hover:border-sky-500 transition-colors">
+                            <i class="fa-solid fa-tower-broadcast text-3xl text-sky-400 mb-2"></i>
+                            <h4 class="font-bold text-sm text-white">2. SENSOR ULTRASÓNICO</h4>
+                            <p class="text-[11px] text-slate-400 mt-1">Emisión de eco y recepción de rebote</p>
+                        </div>
+
+                        <div class="hidden md:flex justify-center text-sky-400 text-xl"><i class="fa-solid fa-chevron-right"></i></div>
+
+                        <!-- Bloque 3 -->
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 relative group hover:border-sky-500 transition-colors">
+                            <i class="fa-solid fa-microchip text-3xl text-indigo-400 mb-2"></i>
+                            <h4 class="font-bold text-sm text-white">3. CONTROLADOR</h4>
+                            <p class="text-[11px] text-slate-400 mt-1">Cálculo de distancia e instrucción</p>
+                        </div>
+
+                        <div class="hidden md:flex justify-center text-emerald-400 text-xl"><i class="fa-solid fa-chevron-right"></i></div>
+
+                        <!-- Bloque 4 -->
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 relative group hover:border-emerald-500 transition-colors md:col-span-4 lg:col-span-1">
+                            <i class="fa-solid fa-lightbulb text-3xl text-emerald-400 mb-2"></i>
+                            <h4 class="font-bold text-sm text-white">4. LED INDICADOR</h4>
+                            <p class="text-[11px] text-slate-400 mt-1">Señal de activación visual</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Timeline de pasos -->
+                <div class="space-y-4 max-w-4xl mx-auto">
+                    
+                    <div class="flex items-start space-x-4 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+                        <span class="w-8 h-8 rounded-full bg-sky-500 text-slate-900 font-bold flex items-center justify-center shrink-0 text-sm">1</span>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Emisión de Ondas Ultrasónicas</h4>
+                            <p class="text-xs sm:text-sm text-slate-300">El sensor ultrasónico emite ráfagas de ondas sonoras de alta frecuencia (inaudibles para el oído humano).</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+                        <span class="w-8 h-8 rounded-full bg-sky-500 text-slate-900 font-bold flex items-center justify-center shrink-0 text-sm">2</span>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Rebote y Recepción del Eco</h4>
+                            <p class="text-xs sm:text-sm text-slate-300">Las ondas rebotan en la superficie de un objeto cercano y parte del eco regresa al módulo receptor del sensor.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+                        <span class="w-8 h-8 rounded-full bg-sky-500 text-slate-900 font-bold flex items-center justify-center shrink-0 text-sm">3</span>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Cálculo Interno de Distancia</h4>
+                            <p class="text-xs sm:text-sm text-slate-300">El sistema utiliza el tiempo transcurrido desde la emisión hasta la recepción del eco para calcular la distancia estimada en centímetros.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+                        <span class="w-8 h-8 rounded-full bg-sky-500 text-slate-900 font-bold flex items-center justify-center shrink-0 text-sm">4</span>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Procesamiento y Activación del LED</h4>
+                            <p class="text-xs sm:text-sm text-slate-300">El programa evalúa si la distancia es menor al umbral configurado. De ser así, se envía una señal eléctrica para encender el LED.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+                        <span class="w-8 h-8 rounded-full bg-emerald-500 text-slate-900 font-bold flex items-center justify-center shrink-0 text-sm">5</span>
+                        <div>
+                            <h4 class="font-bold text-white text-base">Comprobación Mediante Pruebas</h4>
+                            <p class="text-xs sm:text-sm text-slate-300">El correcto desempeño se verifica realizando pruebas con obstáculos situados a diferentes distancias dentro del aula.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Advertencia Técnica sobre Accesibilidad -->
+                <div class="mt-8 bg-blue-950/80 border border-blue-800 p-5 rounded-xl max-w-4xl mx-auto flex items-start space-x-3">
+                    <i class="fa-solid fa-eye-slash text-blue-400 text-2xl mt-0.5"></i>
+                    <p class="text-xs text-blue-200 leading-relaxed">
+                        <strong>Nota de Accesibilidad:</strong> Es necesario aclarar que la luz de un LED ofrece una respuesta visual. Por sí sola, <em>no constituye una alerta accesible</em> para una persona con discapacidad visual total. Se incluyó en el prototipo experimental para verificar el correcto funcionamiento lógico de las mediciones del sensor.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 7. CONSTRUCCIÓN DEL PROTOTIPO Y GALERÍA DE FOTOS REALES -->
+        <section id="prototipo" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-xs font-bold text-brand-primary tracking-wider uppercase bg-blue-100 px-3 py-1 rounded-full">Secciones H e I</span>
+                    <h2 class="font-heading text-3xl font-bold text-brand-dark mt-2">H. Construcción del Prototipo & Programación</h2>
+                    <p class="text-slate-600 text-sm sm:text-base">Proceso técnico de armado y carga de imágenes reales de nuestro equipo.</p>
+                </div>
+
+                <!-- Proceso de Armado -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <h3 class="font-heading font-bold text-lg text-brand-dark mb-3 flex items-center">
+                            <i class="fa-solid fa-hammer text-brand-primary mr-2"></i> Ensamblaje Físico
+                        </h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                            Seleccionamos una tubería de PVC liviana pero resistente para simular la caña del bastón. Fijamos el sensor ultrasónico en el tramo medio-inferior para una cobertura óptima de detección.
+                        </p>
+                        <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                            <li>Corte y ajuste ergonómico del tubo PVC.</li>
+                            <li>Sujeción de cables y componentes mediante aislamientos seguros.</li>
+                            <li>Posicionamiento frontal del LED indicador.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <h3 class="font-heading font-bold text-lg text-brand-dark mb-3 flex items-center">
+                            <i class="fa-solid fa-code text-brand-navy mr-2"></i> Programación y Lógica (Grado 10°)
+                        </h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                            Utilizamos el entorno del controlador Arduino para programar un ciclo continuo que mide el tiempo de ida y retorno del pulso. Si la distancia resultante es menor a la establecida, la placa envía un pulso ALTO (HIGH) al PIN digital conectado al LED.
+                        </p>
+                        <p class="text-xs text-slate-500 bg-white p-2.5 rounded border border-slate-200 font-mono">
+                            // Condición Lógica Básica<br>
+                            si (distancia &lt; umbral) { encenderLED(); }
+                        </p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN DE FOTOGRAFÍAS REALES DEL PROTOTIPO CON SUBIDA DINÁMICA -->
+                <div class="bg-gradient-to-br from-slate-900 to-brand-navy p-6 sm:p-8 rounded-2xl text-white">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b border-slate-700">
+                        <div>
+                            <h3 class="font-heading font-bold text-xl text-white">Espacio para Fotografía Real del Bastón</h3>
+                            <p class="text-xs text-slate-300">Carga o arrastra las fotos reales tomadas durante las pruebas escolares.</p>
+                        </div>
+                        <span class="mt-2 sm:mt-0 text-xs bg-brand-emerald text-white px-3 py-1 rounded-full font-semibold">
+                            <i class="fa-solid fa-upload mr-1"></i> Interactivo
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Contenedor Foto 1: Bastón Construido -->
+                        <div class="bg-slate-800/80 border-2 border-dashed border-slate-600 rounded-xl p-4 text-center relative group min-h-[260px] flex flex-col items-center justify-center">
+                            <img id="preview-img-1" src="" alt="Vista previa del prototipo" class="hidden w-full h-56 object-cover rounded-lg mb-2">
+                            
+                            <div id="placeholder-1" class="space-y-2">
+                                <div class="w-12 h-12 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mx-auto text-xl">
+                                    <i class="fa-solid fa-image"></i>
+                                </div>
+                                <p class="text-xs font-semibold text-slate-200">Foto Real del Bastón Ensamblado</p>
+                                <p class="text-[11px] text-slate-400">Haz clic en el botón inferior para cargar la imagen real del proyecto.</p>
+                            </div>
+
+                            <label class="mt-3 cursor-pointer bg-brand-primary hover:bg-blue-600 text-white text-xs px-4 py-2 rounded-lg font-semibold transition-colors inline-flex items-center">
+                                <i class="fa-solid fa-file-image mr-1.5"></i> Cargar Imagen 1
+                                <input type="file" class="hidden" accept="image/*" onchange="previewImage(event, 'preview-img-1', 'placeholder-1')">
+                            </label>
+                        </div>
+
+                        <!-- Contenedor Foto 2: Equipo de Trabajo -->
+                        <div class="bg-slate-800/80 border-2 border-dashed border-slate-600 rounded-xl p-4 text-center relative group min-h-[260px] flex flex-col items-center justify-center">
+                            <img id="preview-img-2" src="" alt="Vista previa del equipo" class="hidden w-full h-56 object-cover rounded-lg mb-2">
+                            
+                            <div id="placeholder-2" class="space-y-2">
+                                <div class="w-12 h-12 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center mx-auto text-xl">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <p class="text-xs font-semibold text-slate-200">Foto del Equipo Trabajando</p>
+                                <p class="text-[11px] text-slate-400">Nicolás Campos, Aylyn Morales y Akemi Julio durante el proceso.</p>
+                            </div>
+
+                            <label class="mt-3 cursor-pointer bg-brand-primary hover:bg-blue-600 text-white text-xs px-4 py-2 rounded-lg font-semibold transition-colors inline-flex items-center">
+                                <i class="fa-solid fa-file-image mr-1.5"></i> Cargar Imagen 2
+                                <input type="file" class="hidden" accept="image/*" onchange="previewImage(event, 'preview-img-2', 'placeholder-2')">
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 8. PRUEBAS Y RESULTADOS (TABLA EDITABLE EN TIEMPO REAL) -->
+        <section id="pruebas" class="py-16 bg-slate-50 border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-10">
+                    <span class="text-xs font-bold text-brand-emerald tracking-wider uppercase bg-emerald-100 px-3 py-1 rounded-full">Sección J</span>
+                    <h2 class="font-heading text-3xl font-bold text-brand-dark mt-2">J. Pruebas y Resultados</h2>
+                    <p class="text-slate-600 text-sm sm:text-base">Tabla editable para ingresar las mediciones experimentales recolectadas durante las pruebas del prototipo.</p>
+                </div>
+
+                <!-- Contenedor de la Tabla -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-4 bg-slate-100 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                        <span class="text-xs font-bold text-slate-700 uppercase"><i class="fa-solid fa-vial text-brand-primary mr-1.5"></i> Registro de Ensayos Controlados</span>
+                        <button onclick="addTableRow()" class="bg-brand-emerald hover:bg-emerald-600 text-white text-xs px-3 py-2 rounded-lg font-semibold transition-colors flex items-center">
+                            <i class="fa-solid fa-plus mr-1"></i> Agregar Fila de Prueba
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table id="test-table" class="w-full text-left text-xs sm:text-sm text-slate-700">
+                            <thead class="bg-slate-800 text-white font-heading uppercase text-[11px] tracking-wider">
+                                <tr>
+                                    <th class="p-3">#</th>
+                                    <th class="p-3">Prueba Realizada</th>
+                                    <th class="p-3">Obstáculo Utilizado</th>
+                                    <th class="p-3">Distancia Medida</th>
+                                    <th class="p-3">Respuesta Sensor</th>
+                                    <th class="p-3">Respuesta LED</th>
+                                    <th class="p-3">Observaciones</th>
+                                    <th class="p-3 text-center no-print">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 font-medium">
+                                <!-- Fila Ejemplo 1 -->
+                                <tr>
+                                    <td class="p-3 font-bold">1</td>
+                                    <td class="p-3" contenteditable="true">Detección frontal estática</td>
+                                    <td class="p-3" contenteditable="true">Silla / Pared</td>
+                                    <td class="p-3" contenteditable="true">25 cm</td>
+                                    <td class="p-3" contenteditable="true">Detectado</td>
+                                    <td class="p-3" contenteditable="true">Encendido</td>
+                                    <td class="p-3" contenteditable="true">Respuesta inmediata dentro del rango</td>
+                                    <td class="p-3 text-center no-print">
+                                        <button onclick="deleteRow(this)" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <!-- Fila Ejemplo 2 -->
+                                <tr>
+                                    <td class="p-3 font-bold">2</td>
+                                    <td class="p-3" contenteditable="true">Obstáculo fuera de rango</td>
+                                    <td class="p-3" contenteditable="true">Caja de cartón</td>
+                                    <td class="p-3" contenteditable="true">120 cm</td>
+                                    <td class="p-3" contenteditable="true">Fuera de límite</td>
+                                    <td class="p-3" contenteditable="true">Apagado</td>
+                                    <td class="p-3" contenteditable="true">No activa la alerta por superar el rango programado</td>
+                                    <td class="p-3 text-center no-print">
+                                        <button onclick="deleteRow(this)" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-500">
+                        <i class="fa-solid fa-pen-to-square text-brand-primary mr-1"></i> Puedes hacer clic directamente sobre el texto de cualquier celda de la tabla para editar los valores reales tomados durante la exposición escolar.
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 9. BENEFICIOS, LIMITACIONES Y MEJORAS FUTURAS -->
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- K. Beneficios e Impacto Social -->
+                    <div class="bg-emerald-50/50 p-6 sm:p-8 rounded-2xl border border-emerald-200">
+                        <div class="w-10 h-10 bg-brand-emerald text-white rounded-lg flex items-center justify-center font-bold mb-4">
+                            <i class="fa-solid fa-heart text-lg"></i>
+                        </div>
+                        <h2 class="font-heading text-xl font-bold text-slate-900 mb-3">K. Beneficios e Impacto Social</h2>
+                        <ul class="space-y-2 text-xs sm:text-sm text-slate-700 leading-relaxed list-disc list-inside">
+                            <li><strong>Aprendizaje Práctico:</strong> Conexión real entre la teoría de la programación y el desarrollo físico de hardware.</li>
+                            <li><strong>Sensibilización:</strong> Fomenta la empatía y la búsqueda de soluciones tecnológicas para personas con discapacidad visual.</li>
+                            <li><strong>Carácter Experimental:</strong> Se aclara que es un prototipo escolar en desarrollo y <em>no reemplaza</em> un bastón blanco profesional certificado.</li>
+                        </ul>
+                    </div>
+
+                    <!-- L. Limitaciones y Mejoras Futuras -->
+                    <div class="bg-blue-50/50 p-6 sm:p-8 rounded-2xl border border-blue-200">
+                        <div class="w-10 h-10 bg-brand-primary text-white rounded-lg flex items-center justify-center font-bold mb-4">
+                            <i class="fa-solid fa-rocket text-lg"></i>
+                        </div>
+                        <h2 class="font-heading text-xl font-bold text-slate-900 mb-3">L. Limitaciones y Mejoras Futuras</h2>
+                        <div class="space-y-3 text-xs sm:text-sm text-slate-700">
+                            <div>
+                                <span class="font-bold text-red-600 text-xs block uppercase">Limitación Actual:</span>
+                                <p class="text-xs text-slate-600">El LED emite solo una señal luminosa, restringiendo la accesibilidad para usuarios ciegos.</p>
+                            </div>
+                            <div>
+                                <span class="font-bold text-brand-primary text-xs block uppercase">Mejoras Proyectadas:</span>
+                                <ul class="list-disc list-inside text-xs text-slate-600 space-y-1">
+                                    <li>Integrar un módulo de alerta vibratoria o buzzer de alta frecuencia.</li>
+                                    <li>Diseñar una carcasa impermeable impresa en 3D para la electrónica.</li>
+                                    <li>Optimizar la batería para brindar mayor autonomía energética.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. TRABAJO EN EQUIPO & INTEGRANTES -->
+        <section id="equipo" class="py-16 bg-slate-900 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-xs font-bold text-sky-400 tracking-wider uppercase bg-sky-950 px-3 py-1 rounded-full border border-sky-800">Sección M</span>
+                    <h2 class="font-heading text-3xl font-bold text-white mt-2">M. Equipo de Trabajo y Colaboración</h2>
+                    <p class="text-slate-300 text-sm sm:text-base">Distribuir tareas, compartir ideas y resolver problemas colectivamente fue fundamental para construir nuestro prototipo.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Integrante 1 -->
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 text-center relative hover:border-sky-500 transition-colors">
+                        <div class="w-16 h-16 bg-blue-500/20 text-brand-primary rounded-full flex items-center justify-center mx-auto text-2xl font-bold mb-4 border border-blue-500/30">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-lg text-white">Nicolás Campos</h3>
+                        <span class="text-xs text-slate-400 block mt-1">Estudiante Grado 10-2</span>
+                        <div class="mt-4 pt-4 border-t border-slate-700 text-xs text-slate-300">
+                            Co-creador del Prototipo "Bastón Inteligente".
+                        </div>
+                    </div>
+
+                    <!-- Integrante 2 -->
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 text-center relative hover:border-sky-500 transition-colors">
+                        <div class="w-16 h-16 bg-blue-500/20 text-brand-primary rounded-full flex items-center justify-center mx-auto text-2xl font-bold mb-4 border border-blue-500/30">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-lg text-white">Aylyn Morales</h3>
+                        <span class="text-xs text-slate-400 block mt-1">Estudiante Grado 10-2</span>
+                        <div class="mt-4 pt-4 border-t border-slate-700 text-xs text-slate-300">
+                            Co-creadora del Prototipo "Bastón Inteligente".
+                        </div>
+                    </div>
+
+                    <!-- Integrante 3 -->
+                    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 text-center relative hover:border-sky-500 transition-colors">
+                        <div class="w-16 h-16 bg-blue-500/20 text-brand-primary rounded-full flex items-center justify-center mx-auto text-2xl font-bold mb-4 border border-blue-500/30">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-lg text-white">Akemi Julio</h3>
+                        <span class="text-xs text-slate-400 block mt-1">Estudiante Grado 10-2</span>
+                        <div class="mt-4 pt-4 border-t border-slate-700 text-xs text-slate-300">
+                            Co-creadora del Prototipo "Bastón Inteligente".
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 11. CONCLUSIONES Y CRÉDITOS -->
+        <section class="py-16 bg-slate-50">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+                
+                <span class="text-xs font-bold text-brand-navy tracking-wider uppercase bg-blue-100 px-3 py-1 rounded-full">Sección N & O</span>
+                <h2 class="font-heading text-3xl font-bold text-brand-dark">Conclusiones del Proyecto</h2>
+
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed text-left bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    A través del desarrollo de este proyecto, aprendimos cómo interactúan los sensores ultrasónicos con las placas de control para responder a eventos del entorno real. Comprendimos la importancia de la lógica de programación y el diseño por etapas. Asimismo, pudimos reflexionar sobre la responsabilidad que tenemos como estudiantes al diseñar tecnología orientada a la accesibilidad y la inclusión social.
+                </p>
+
+                <!-- Frase Destacada de Cierre -->
+                <div class="bg-gradient-to-r from-brand-navy to-brand-primary p-8 rounded-2xl text-white shadow-lg my-8">
+                    <i class="fa-solid fa-quote-left text-blue-300 text-3xl mb-2 block"></i>
+                    <blockquote class="font-heading text-lg sm:text-xl font-semibold italic">
+                        “Creemos que la tecnología tiene un gran potencial cuando se utiliza para comprender necesidades reales y diseñar soluciones más inclusivas.”
+                    </blockquote>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 12. GENERADOR DE CÓDIGO QR Y GUÍA DE PUBLICACIÓN EN LÍNEA -->
+        <section id="qr-section" class="py-16 bg-white border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-xs font-bold text-brand-emerald tracking-wider uppercase bg-emerald-100 px-3 py-1 rounded-full">Sección 4</span>
+                    <h2 class="font-heading text-3xl font-bold text-brand-dark mt-2">Publicación Web & Código QR Interactivo</h2>
+                    <p class="text-slate-600 text-sm sm:text-base">Escriba la dirección pública de su web alojada para generar automáticamente el Código QR para la feria escolar.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50 p-6 sm:p-8 rounded-2xl border border-slate-200">
+                    
+                    <!-- Formulario QR -->
+                    <div class="lg:col-span-7 space-y-4">
+                        <h3 class="font-heading font-bold text-lg text-brand-dark">Generador Dinámico de Código QR</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Una vez cargado este archivo HTML en un servidor gratuito (como GitHub Pages o Netlify), pegue el enlace web generado en la casilla de abajo para actualizar el código QR en tiempo real.
+                        </p>
+
+                        <div>
+                            <label for="qr-url-input" class="block text-xs font-bold text-slate-700 mb-1">URL Pública del Proyecto:</label>
+                            <input type="url" id="qr-url-input" value="https://mi-baston-inteligente.netlify.app" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-brand-primary">
+                        </div>
+
+                        <button onclick="updateQRCode()" class="bg-brand-primary hover:bg-blue-600 text-white text-xs px-4 py-2.5 rounded-lg font-semibold transition-colors flex items-center">
+                            <i class="fa-solid fa-qrcode mr-2"></i> Actualizar Código QR
+                        </button>
+
+                        <!-- Instrucciones breves de publicación -->
+                        <div class="mt-6 pt-4 border-t border-slate-200 space-y-2">
+                            <h4 class="font-bold text-xs text-slate-800">¿Cómo publicar gratis desde Celular o PC?</h4>
+                            <ol class="list-decimal list-inside text-xs text-slate-600 space-y-1">
+                                <li>Guarda este archivo con el nombre <code class="bg-slate-200 px-1 rounded text-slate-800">index.html</code>.</li>
+                                <li>Ingresa gratuitamente a <strong class="text-brand-primary">Netlify Drop</strong> (netlify.com/drop) o <strong class="text-brand-primary">GitHub Pages</strong>.</li>
+                                <li>Sube el archivo HTML para obtener tu dirección web pública en segundos.</li>
+                                <li>Copia la dirección, pégala arriba e imprime el código QR resultante para exponerlo en el estand escolar.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Muestra del Código QR -->
+                    <div class="lg:col-span-5 flex flex-col items-center justify-center bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                        <div id="qrcode-box" class="p-4 bg-white border border-slate-200 rounded-lg shadow-inner"></div>
+                        <span class="text-xs text-slate-500 mt-3 font-semibold text-center">Escanea para acceder desde teléfonos móviles</span>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER / PIE DE PÁGINA INSTITUCIONAL -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+            <p class="font-medium text-slate-300">
+                Bastón Inteligente: Tecnología para la Inclusión &copy; Grado 10-2
+            </p>
+            <p class="text-slate-500">
+                Área de Tecnología e Informática | Integrantes: Nicolás Campos, Aylyn Morales y Akemi Julio.
+            </p>
+        </div>
+    </footer>
+
+    <!-- LÓGICA JAVASCRIPT VANILLA -->
+    <script>
+        // 1. Menú Móvil
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 2. Previsualizador dinámico de imágenes
+        function previewImage(event, imgId, placeholderId) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgElement = document.getElementById(imgId);
+                    const placeholderElement = document.getElementById(placeholderId);
+                    
+                    imgElement.src = e.target.result;
+                    imgElement.classList.remove('hidden');
+                    placeholderElement.classList.add('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 3. Generación y Actualización de Código QR
+        let qrcode = null;
+
+        function updateQRCode() {
+            const urlInput = document.getElementById('qr-url-input').value;
+            const qrBox = document.getElementById('qrcode-box');
+            
+            // Limpiar anterior
+            qrBox.innerHTML = "";
+
+            if(urlInput.trim() !== "") {
+                qrcode = new QRCode(qrBox, {
+                    text: urlInput,
+                    width: 160,
+                    height: 160,
+                    colorDark : "#0f172a",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+            }
+        }
+
+        // Inicializar QR por defecto
+        window.addEventListener('load', () => {
+            updateQRCode();
+        });
+
+        // 4. Funciones para la Tabla de Pruebas Editable
+        function addTableRow() {
+            const tableBody = document.querySelector('#test-table tbody');
+            const rowCount = tableBody.rows.length + 1;
+            const newRow = document.createElement('tr');
+
+            newRow.innerHTML = `
+                <td class="p-3 font-bold">${rowCount}</td>
+                <td class="p-3" contenteditable="true">Nueva Prueba</td>
+                <td class="p-3" contenteditable="true">Especifique obstáculo</td>
+                <td class="p-3" contenteditable="true">0 cm</td>
+                <td class="p-3" contenteditable="true">Respuesta</td>
+                <td class="p-3" contenteditable="true">Estado LED</td>
+                <td class="p-3" contenteditable="true">Observación</td>
+                <td class="p-3 text-center no-print">
+                    <button onclick="deleteRow(this)" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            `;
+            tableBody.appendChild(newRow);
+        }
+
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+    </script>
+</body>
+</html>
